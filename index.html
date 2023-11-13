@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="index.js" defer></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <a class="go" href="#dataPage">↓</a>
+  <div class="landingPage" id="landingPage">
+    <h1>QuadCraft</h1>
+    <div class="content">
+      <div class="left">
+        <div class="circular-progress">
+          <div class="value-container">0%</div>
+        </div>
+      </div>
+      <div class="right">
+        <!-- <canvas id="probabilities"></canvas> -->
+        <!-- <div class="sensor-info-box">
+          <p class="info-item">Current AQI: <span id="aqiValue"></span></p>
+          <p class="info-item">Actual Temperature: <span id="tempValue"></span>°C</p>
+          <p class="info-item">Feels Like: <span id="humidityValue"></span>°C</p>
+          <p class="info-item">Drone's Flying at: <span id="droneAltitude"></span>m</p>
+        </div> -->
+        <div class="data-card" id="card1">
+          <h3><span id="aqiValue"></span></h3>
+          <h4>AQI</h4>
+          <p>Great day to be alive!</p>
+        </div>
+        <div class="data-card" id="card2">
+          <h3><span id="tempValue"></span>°C</h3>
+          <h4 id="whichTemp">TEMPERATURE</h4>
+          <p>Maybe not!</p>
+        </div>
+
+      </div>
+    </div>
+    <div>
+      <br><br><br><br><br><br><br><br><br>
+    </div>
+  </div>
+  <div class="dataPage" id="dataPage">
+    <div>
+      <br><br><br><br><br><br><br><br><br><br><br>
+    </div>
+    <div class="charts">
+      <div class="1">
+        <canvas id="ultrasonic"></canvas>
+      </div>
+      <div class="2">
+        <canvas id="water-level"></canvas>
+      </div>
+      <div class="3">
+        <canvas id="water-flow"></canvas>
+      </div>
+      <div class="4">
+        <canvas id="humidity"></canvas>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
