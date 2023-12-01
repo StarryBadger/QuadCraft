@@ -2,6 +2,7 @@ let progressBar = document.querySelector(".circular-progress");
 let valueContainer = document.querySelector(".value-container");
 let goButton = document.querySelector(".go");
 let lastAQI;
+let val;
 const updateCircle = (val) => {
   let currentIndex = 0;
   let progressValue = 0;
@@ -284,10 +285,11 @@ let airQualityReadings = [];
 let temperatureReadings = [];
 let humidityReadings = [];
 let lightIntensityReadings = [];
+let droneHeightReadings = [];
 let probabilities = [];
 (async function test() {
   const response = await fetch(
-    "https://api.thingspeak.com/channels/2296158/feeds.json?results=60"
+    "https://api.thingspeak.com/channels/2365794/feeds.json?results=60"
   );
   const data = await response.json();
 
@@ -299,14 +301,9 @@ let probabilities = [];
     if (feed.field3) pressureReadings.push([feed.field3, time]);
     if (feed.field4) lightIntensityReadings.push([feed.field4, time]);
     if (feed.field5) airQualityReadings.push([feed.field5, time]);
-    if (feed.field7) probabilities.push([feed.field8, time]);
+    if (feed.field6) droneHeightReadings.push([feed.field6, time]);
+    if (feed.field7) probabilities.push([feed.field7, time]);
   });
-
-  // pressureReadings = [32, 35, 37, 31, 40, 45];
-  // waterLevelReadings = [32, 35, 37, 31, 40, 45];
-  // waterFlowReadings = [32, 35, 37, 31, 40, 45];
-  // humidityReadings = [32, 35, 37, 31, 40, 45];
-  // addData(floodProbability, probabilities);
   const dataPoints = 10;
   addData(pressureChart, pressureReadings.slice(-dataPoints));
   addData(AQIChart, airQualityReadings.slice(-dataPoints));
@@ -314,43 +311,111 @@ let probabilities = [];
   addData(humidityChart, humidityReadings.slice(-dataPoints));
   addData(humidityChart, temperatureReadings.slice(-dataPoints), 1);
   updateCircle(71);
+  console.log(temperatureReadings)
   lastAQI = airQualityReadings.slice(-1)[0][0];
   lastPressure = pressureReadings.slice(-1)[0][0];
   lastHumidity = humidityReadings.slice(-1)[0][0];
   lastTemperature = temperatureReadings.slice(-1)[0][0];
+  console.log(lastTemperature)
   lastLight = lightIntensityReadings.slice(-1)[0][0];
-  updateSensorInfo(lastAQI, lastHumidity, lastTemperature, lastAQI);
+  lastHeight = droneHeightReadings.slice(-1)[0][0];
+  updateSensorInfo(lastAQI, lastHumidity, lastTemperature, lastHeight);
 })();
-console.log(lastAQI);
-// console.log("pressureReadings after update:", pressureReadings)
-function updateSensorInfo(AQI, humidity, temp) {
+function updateSensorInfo(AQI, humidity, temp, ht) {
+  console.log(temp)
   const aqiElement = document.getElementById("aqiValue");
-  aqiElement.textContent = AQI
-  const cardFirst = document.getElementById("card1");
-  let originalContent1 = aqiElement.textContent;
-  // cardFirst.addEventListener("mouseenter", () => {
-  //   aqiElement.textContent = "Hello";
-  // });
-  // cardFirst.addEventListener("mouseleave", () => {
-  //   aqiElement.textContent = originalContent;
-  // });
-  const tempElement = document.getElementById("tempValue")
+  aqiElement.textContent = AQI;
+  const aqiInfo = document.getElementById("aqiInfo");
+  let aqiMessage = "";
+  if (AQI < 50) {
+    aqiMessage = "Good AQI. Enjoy the fresh air!";
+  } else if (AQI <= 100) {
+    aqiMessage = "Moderate AQI. No major concerns.";
+  } else if (AQI <= 150) {
+    aqiMessage = "Unhealthy AQI. Take precautions.";
+  } else {
+    aqiMessage = "Unhealthy AQI. Limit outdoor activities.";
+  }
+
+  // Update the content of the HTML element
+  aqiInfo.textContent = aqiMessage;
+
+
+  const tempElement = document.getElementById("tempValue");
   tempElement.textContent = temp;
-  const cardSecond = document.getElementById("card2");
-  let originalContent2 = tempElement.textContent;
-  cardSecond.addEventListener("mouseenter", () => {
-    tempElement.textContent = humidity;
-  });
-  cardSecond.addEventListener("mouseleave", () => {
-    tempElement.textContent = originalContent2;
-  });
-  const whichTemp=document.getElementById("whichTemp");
-  cardSecond.addEventListener("mouseenter", () => {
-    whichTemp.textContent = "FEELS LIKE";
-  });
-  cardSecond.addEventListener("mouseleave", () => {
-    whichTemp.textContent = "TEMPERATURE";
-  });
+  const tempInfo = document.getElementById("tempInfo");
+  let messageTemp = "";
+  if (temp < 0) {
+    messageTemp = "Chilly! Bundle up!";
+  } else if (temp >= 0 && temp <= 10) {
+    messageTemp = "Cool vibes, grab a jacket!";
+  } else if (temp > 10 && temp <= 20) {
+    messageTemp = "Perfect weather! Enjoy!";
+  } else if (temp > 20 && temp <= 30) {
+    messageTemp = "It's warm outside!";
+  } else {
+    messageTemp = "Hot day! Stay cool!";
+  }
+  tempInfo.textContent = messageTemp;
+
+
+  const droneHeight = document.getElementById("droneHeight");
+  droneHeight.textContent = ht;
+
+  const humid = document.getElementById("humid");
+  humid.textContent = humidity;
+  const humidInfo = document.getElementById("humidInfo");
+  let humidMessage = "";
+  if (humidity < 30) {
+    humidMessage = "Low humidity, dry day!";
+  } else if (humidity <= 60) {
+    humidMessage = "Comfortable humidity. Enjoy!";
+  } else if (humidity <= 80) {
+    humidMessage = "Moderate humidity. Stay hydrated!";
+  } else {
+    humidMessage = "High humidity. Keep cool!";
+  }
+  humidInfo.textContent = humidMessage;
+
+
+
+  const feelsLike = document.getElementById("feelsLike");
+  const feelsLikeValue = Math.round((temp - 5 + (humidity * 12 / 100)), 2)
+  feelsLike.textContent = feelsLikeValue.toString();
+  const feelsLikeInfo = document.getElementById("feelsLikeInfo");
+  let message = "";
+  if (feelsLikeValue < 0) {
+    message = "Chilly! Bundle up!";
+  } else if (feelsLikeValue >= 0 && feelsLikeValue <= 10) {
+    message = "Cool vibes, grab a jacket!";
+  } else if (feelsLikeValue > 10 && feelsLikeValue <= 20) {
+    message = "Perfect weather! Enjoy!";
+  } else if (feelsLikeValue > 20 && feelsLikeValue <= 30) {
+    message = "It's warm outside!";
+  } else {
+    message = "Hot day! Stay cool!";
+  }
+  feelsLikeInfo.textContent = message;
+
+  const rainChance = document.getElementById("rainChance");
+  precipitationChance = Math.round((0.7 * humidity + 0.3 * temp));
+  rainChance.textContent = precipitationChance.toString();
+  const rainInfo = document.getElementById("rainInfo");
+  let rainMessage = "";
+  if (precipitationChance === 0) {
+    rainMessage = "Dry day, no rain expected!";
+  } else if (precipitationChance <= 30) {
+    rainMessage = "Slim chance of rain.";
+  } else if (precipitationChance <= 60) {
+    rainMessage = "Moderate chance of rain. Umbrella time!";
+  } else if (precipitationChance <= 90) {
+    rainMessage = "Rain likely. Don't forget your umbrella!";
+  } else {
+    rainMessage = "High chance of rain. Bring a raincoat!";
+  }
+  rainInfo.textContent = rainMessage;
+  val = 15;
+
 
 }
 updateSensorInfo();
@@ -375,24 +440,39 @@ function removeData(chart) {
 
 const setUp = () => {
   goButton.classList.add("up");
+  goButton.classList.remove("middle");
   goButton.setAttribute("href", "#landingPage");
+};
+
+const setMiddle = () => {
+  goButton.classList.add("middle");
+  goButton.classList.remove("up");
+  goButton.setAttribute("href", "#middlePage");
 };
 
 const setDown = () => {
   goButton.classList.remove("up");
+  goButton.classList.remove("middle");
   goButton.setAttribute("href", "#dataPage");
 };
 
 goButton.addEventListener("click", () => {
-  if (goButton.classList.contains("up")) setTimeout(setDown, 400);
-  else setTimeout(setUp, 400);
+  if (goButton.classList.contains("up")) {
+    setTimeout(setMiddle, 400);
+  } else if (goButton.classList.contains("middle")) {
+    setTimeout(setDown, 400);
+  } else {
+    setTimeout(setUp, 400);
+  }
 });
 
+
 progressBar.addEventListener("click", async (e) => {
-  const val = 85 + Math.floor(Math.random() * 11) - 5;
+  // const val = 85 + Math.floor(Math.random() * 11) - 5;
   const res = await fetch(
-    `https://api.thingspeak.com/update?api_key=Q9I0S0Z5UP9JIU48&field8=${val}`
+    `https://api.thingspeak.com/update?api_key=Q9IOSOZ5UP9JIU48&field7=${val}`
   );
+  console.log(res);
   const response = await res.json();
   if (response == 0) {
     console.log("Thingspeak Overloaded!");

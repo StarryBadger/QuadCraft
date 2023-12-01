@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <a class="go" href="#dataPage">↓</a>
+  <a class="go" href="#dataPage" class="up">↓</a>
   <div class="landingPage" id="landingPage">
     <h1>QuadCraft</h1>
     <div class="content">
@@ -21,22 +21,15 @@
         </div>
       </div>
       <div class="right">
-        <!-- <canvas id="probabilities"></canvas> -->
-        <!-- <div class="sensor-info-box">
-          <p class="info-item">Current AQI: <span id="aqiValue"></span></p>
-          <p class="info-item">Actual Temperature: <span id="tempValue"></span>°C</p>
-          <p class="info-item">Feels Like: <span id="humidityValue"></span>°C</p>
-          <p class="info-item">Drone's Flying at: <span id="droneAltitude"></span>m</p>
-        </div> -->
         <div class="data-card" id="card1">
           <h3><span id="aqiValue"></span></h3>
-          <h4>AQI</h4>
-          <p>Great day to be alive!</p>
+          <h4>Air Quality Index</h4>
+          <p id="aqiInfo"></p>
         </div>
         <div class="data-card" id="card2">
           <h3><span id="tempValue"></span>°C</h3>
           <h4 id="whichTemp">TEMPERATURE</h4>
-          <p>Maybe not!</p>
+          <p id="tempInfo"></p>
         </div>
 
       </div>
@@ -45,9 +38,44 @@
       <br><br><br><br><br><br><br><br><br>
     </div>
   </div>
-  <div class="dataPage" id="dataPage">
+  <div class="middlePage" id="middlePage">
+    <div class="space"></div>
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <div class="content">
+      <div class="leftright">
+        <div class="data-card">
+          <h3><span id="droneHeight"></span>m</h3>
+          <h4>DRONE HEIGHT</h4> 
+          <p>With Respect to Takeoff Altitude</p>
+        </div>
+        <br><br>
+        <div class="data-card">
+          <h3><span id="rainChance"></span>%</h3>
+          <h4 id="whichTemp">CHANCE OF RAIN</h4>
+          <p id="rainInfo"></p>
+        </div>
+      </div>
+      <div class="rightleft">
+        <div class="data-card">
+          <h3><span id="feelsLike"></span>°C</h3>
+          <h4>FEELS LIKE</h4>
+          <p id="feelsLikeInfo"></p>
+        </div>
+        <br><br>
+        <div class="data-card">
+          <h3><span id="humid"></span>%</h3>
+          <h4 id="whichTemp">HUMIDITY</h4>
+          <p id="humidInfo">It's humid out there!</p>
+        </div>
+      </div>
+    </div>
     <div>
-      <br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br>
+    </div>
+  </div>
+  <div class="dataPage" id="dataPage">
+    <div class="space2"></div>
+    <div>
     </div>
     <div class="charts">
       <div class="1">
